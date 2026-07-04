@@ -173,7 +173,3 @@ Durante el desarrollo del proyecto se fortalecieron conocimientos relacionados c
 - Uso responsable de herramientas de asistencia por Inteligencia Artificial dentro del proceso de desarrollo.
 
 ---
-
-# Licencia
-
-Este proyecto fue desarrollado con fines educativos y de aprendizaje.
