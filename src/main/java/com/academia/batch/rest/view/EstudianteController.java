@@ -39,11 +39,11 @@ public class EstudianteController {
         return ResponseEntity.ok(estudianteRepository.findAll());
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<EstudianteEntity> obtenerPorId(@PathVariable Long id) {
-        Optional<EstudianteEntity> estudiante = estudianteRepository.findById(id);
-        return estudiante.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
-    }
+   /**
+     * Endpoint para contar el número de estudiantes aprobados.
+     *
+     * @return ResponseEntity con un mapa que contiene el total de estudiantes aprobados.
+     */
 
     @GetMapping("/aprobados/total")
     public ResponseEntity<Map<String, Long>> contarAprobados() {

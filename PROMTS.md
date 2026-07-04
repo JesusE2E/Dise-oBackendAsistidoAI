@@ -477,7 +477,7 @@ List<EstudianteEntity> findByGrupo(String grupo);
 
 - Extiende:
 ```
-JpaRepository<EstudianteReporte, Long>
+MongoRepository<EstudianteReporte, String>
 ```
 
 - Método adicional:
