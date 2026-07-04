@@ -346,10 +346,318 @@ No agregues comentarios, explicaciones, atributos, constructores, métodos adici
 
 
 
+--
+# Prompt
+
+Genera únicamente el archivo `application.properties` para un proyecto Spring Boot 3.
+
+## Configuración de base de datos MySQL
+
+- URL: `jdbc:mysql://localhost:3306/academia`
+- Usuario: `alumno`
+- Contraseña: `alumno123`
+
+Incluye configuraciones compatibles con Spring Data JPA y Hibernate.
+
+## Configuración de Spring Batch
+
+- Inicializar el esquema de Spring Batch en cada arranque.
+- Permitir configuración para controlar el comportamiento de inicialización del esquema con opciones como:
+  - `always`
+  - `none`
+
+- Ejecutar automáticamente el Job al iniciar la aplicación.
+
+## Configuración MongoDB (Docker)
+
+- URI:
+  `mongodb://root:root123@localhost:27017/academia?authSource=admin`
+
+## Logging
+
+- Configura logs en un formato legible y agradable.
+- Incluye soporte para colores en consola si es posible.
+- Ajusta el nivel de logging para facilitar depuración.
+
+## Requisitos adicionales
+
+- Incluye propiedades para control de inicialización de base de datos (crear o no crear esquema al iniciar la aplicación).
+- Permite alternar entre modos como `none` y `always` en dichas configuraciones.
+
+## Restricciones
+
+- Utiliza únicamente propiedades compatibles con Spring Boot 3.
+- No agregues comentarios.
+- No agregues explicaciones.
+- No agregues texto antes ni después del archivo.
+- Devuelve únicamente el contenido completo del archivo `application.properties`.
 
 
 
+--
 
+--
+# Prompt para la estructura de capas y clases en Servicios REST
+
+Actúa como un arquitecto Senior experto en Java 21, Spring Boot 3, JPA y arquitectura en capas (Controller, Service, Repository, Model, View).
+
+Tu tarea es generar la estructura de paquetes y clases dentro del paquete:
+
+```
+com.academia.batch.rest
+```
+
+---
+
+## 📦 Estructura de paquetes
+
+Dentro de `rest` debes crear los siguientes subpaquetes:
+
+- model
+- repository
+- service
+- view
+
+---
+
+## 🧩 Paquete `model`
+
+Crea la clase:
+
+```
+EstudianteEntity
+```
+
+### Requisitos:
+
+- Debe mapear la tabla `estudiantes_procesados`
+- Usar anotaciones JPA:
+  - `@Entity`
+  - `@Table(name = "estudiantes_procesados")`
+- Campos:
+
+| Campo | Tipo DB | Tipo Java |
+|------|--------|----------|
+| id | INT AUTO_INCREMENT | Long |
+| nombre | VARCHAR(100) | String |
+| grupo | VARCHAR(10) | String |
+| nota1 | DECIMAL(5,2) | Long |
+| nota2 | DECIMAL(5,2) | Long |
+| nota3 | DECIMAL(5,2) | Long |
+| promedio | DECIMAL(5,2) | Long |
+
+### Reglas:
+
+- `id` debe tener:
+  - `@Id`
+  - `@GeneratedValue(strategy = GenerationType.IDENTITY)`
+
+---
+
+## 🗄️ Paquete `repository`
+
+Crear dos interfaces:
+
+### 1. `EstudianteRepository`
+
+- Extiende:
+```
+JpaRepository<EstudianteEntity, Long>
+```
+
+- Método adicional:
+
+```java
+List<EstudianteEntity> findByGrupo(String grupo);
+```
+
+---
+
+### 2. `ReporteRepository`
+
+- Extiende:
+```
+JpaRepository<EstudianteReporte, Long>
+```
+
+- Método adicional:
+
+```java
+List<EstudianteReporte> findByEstado(String estado);
+```
+
+---
+
+## ⚙️ Paquete `service`
+
+Crear la clase:
+
+```
+EstudianteService
+```
+
+### Requisitos:
+
+- Anotar con:
+```
+@Service
+```
+
+- Inyectar `EstudianteRepository` usando **inyección por constructor**
+
+---
+
+### Método requerido:
+
+```java
+Long contarAprobados();
+```
+
+### Lógica del método:
+
+- Usar `findAll()` del repository
+- Filtrar estudiantes con promedio >= 70
+- Usar Stream API:
+  - `filter`
+  - `count`
+- Retornar el total como `Long`
+
+---
+
+## 🚫 Restricciones
+
+- No agregar explicaciones
+- No agregar comentarios
+- No agregar texto adicional fuera del código
+- No generar controladores (a menos que se soliciten después)
+- No modificar nombres de paquetes, clases o métodos
+- No usar Lombok
+
+---
+
+## 📤 Salida
+
+Devuelve únicamente el código completo con toda la estructura solicitada
+--
+
+## **Promt para la clase controller **
+# Prompt para la clase `EstudianteController`
+
+Actúa como un desarrollador Senior experto en Java 21, Spring Boot 3, arquitectura REST y Spring MVC.
+
+Tu tarea es implementar la clase existente llamada:
+
+```
+EstudianteController
+```
+
+---
+
+## 📌 Anotaciones obligatorias
+
+- La clase debe ser un controlador REST usando:
+  - `@Controller`
+  - `@RequestMapping("/api/estudiantes")`
+
+---
+
+## 🧩 Inyección de dependencias
+
+Usa **inyección por constructor** (no usar `@Autowired` en atributos).
+
+Debes inyectar:
+
+- `EstudianteRepository`
+- `EstudianteService`
+
+---
+
+## 🚀 Endpoints requeridos
+
+Implementa los siguientes métodos REST usando `ResponseEntity`:
+
+---
+
+### 1. GET `/`
+
+- Listar todos los estudiantes
+- Retorno: `200 OK`
+
+---
+
+### 2. GET `/{id}`
+
+- Buscar estudiante por ID
+- Retorno:
+  - `200 OK` si existe
+  - `404 NOT FOUND` si no existe
+
+---
+
+### 3. GET `/aprobados/total`
+
+- Llama al servicio `contarAprobados()`
+- Retorna un `Map<String, Long>` con la estructura:
+
+```json
+{
+  "totalAprobados": 10
+}
+```
+
+---
+
+### 4. POST `/`
+
+- Crear un nuevo estudiante
+- Retorna:
+  - `201 CREATED`
+
+---
+
+### 5. PUT `/{id}`
+
+- Reemplazar completamente el estudiante
+- Retorna:
+  - `200 OK` si existe
+  - `404 NOT FOUND` si no existe
+
+---
+
+### 6. PATCH `/{id}`
+
+- Actualizar solo el campo `grupo`
+- Entrada: `Map<String, String>`
+- Retorna:
+  - `200 OK` si existe
+  - `404 NOT FOUND` si no existe
+
+---
+
+### 7. DELETE `/{id}`
+
+- Eliminar estudiante por ID
+- Retorna:
+  - `204 NO CONTENT` si se elimina
+  - `404 NOT FOUND` si no existe
+
+---
+
+## ⚙️ Reglas obligatorias
+
+- Usar `ResponseEntity` en todos los endpoints
+- No usar Lombok
+- No agregar servicios adicionales
+- No cambiar nombres de métodos ni rutas
+- No agregar comentarios
+- No agregar explicaciones
+- Mantener código limpio y estándar Spring Boot 3
+
+---
+
+## 📤 Salida
+
+Devuelve únicamente el código completo de la clase `EstudianteController`, listo para copiar y pegar.
 
 
 ## **.- Promt de creacion del contenido del archivo .gitignore**
