@@ -130,12 +130,15 @@ mvn test
 src
 ├── main
 │   ├── java
-│   │   ├── config
-│   │   ├── controller
-│   │   ├── model
-│   │   ├── processor
-│   │   ├── repository
-│   │   ├── service
+│   │   ├── batch
+│   │   |    ├── config
+│   │   |    ├── model
+│   │   |    ├── processor
+│   │   |    ├── rest
+|   |   |         ├── model
+│   │   |         ├── service
+│   │   !         ├── repository
+│   │   |         ├── view
 │   │   └── SpringBatchApplication
 │   └── resources
 │       ├── application.properties
